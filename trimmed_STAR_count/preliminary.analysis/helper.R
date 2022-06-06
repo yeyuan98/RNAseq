@@ -12,7 +12,7 @@ library(tidyverse)
 library(progress)
 library(org.Dm.eg.db)
 
-read.sample <- function(df.path, top.perc = 10){
+read.sample <- function(df.path, top.perc = 100){
   # Function for reading in a SINGLE sample and get symbols
   #   1st - Read in original file and only keeping top 10% genes
   #     Did NOT consider the effect of gene length
@@ -45,4 +45,5 @@ read.samples <- function(named.samples.paths, .progress = T){
       mutate(sample = sample.name)
   })
 }
+
 
