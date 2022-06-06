@@ -6,11 +6,13 @@ if(F){
   "
 }
 
+#qqc
+
 library(tidyverse)
 library(progress)
 library(org.Dm.eg.db)
 
-read.sample <- function(df.path){
+read.sample <- function(df.path, top.perc = 10){
   # Function for reading in a SINGLE sample and get symbols
   #   1st - Read in original file and only keeping top 10% genes
   #     Did NOT consider the effect of gene length
@@ -20,7 +22,7 @@ read.sample <- function(df.path){
                            "count.first.read", "count.second.read"),
              col_types = "ciii") %>%
     filter(str_detect(gene.id, "^FBgn")) %>%
-    filter(count.unstranded > quantile(count.unstranded, probs = .9))
+    filter(count.unstranded > quantile(count.unstranded, probs = (100-top.perc) / 100))
   #   2nd - Get symbol by gene.id.
   #     It is possible to fail and NA will be the result for those
   id2symbol <- function(id)
