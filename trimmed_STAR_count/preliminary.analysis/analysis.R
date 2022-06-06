@@ -33,3 +33,14 @@ df %>% filter(complete.cases(df)) %>%
   dplyr::select(symbol, count.unstranded, sample) %>% 
   pivot_wider(names_from = sample, values_from = count.unstranded) -> df.fc
 #   For each meaningful pair, plot fold change
+
+df.fc.2 = as.data.frame(df.fc)
+rownames(df.fc.2) = df.fc.2$symbol
+df.fc.2 = df.fc.2 %>% dplyr::select(-c("symbol"))
+df.fc.2 = as.matrix(df.fc.2)
+df.fc.2 = as.matrix(df.fc.2)
+df.fc.2[is.na(df.fc.2)] = 0
+df.fc.normalized = sweep(df.fc.2,2,colSums(df.fc.2)/1e+6,`/`)
+
+
+
