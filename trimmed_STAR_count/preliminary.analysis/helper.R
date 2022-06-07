@@ -6,11 +6,19 @@ if(F){
   "
 }
 
-#qqc
-
 library(tidyverse)
-library(progress)
 library(org.Dm.eg.db)
+
+#     Faster evaluation by eliminating db open/close overhead
+id2symbol <- function(ids){
+  #  Get symbol from id. Those not found are returned as NA
+  idsym <- 
+    toTable(org.Dm.egFLYBASE2EG) %>%
+    inner_join(toTable(org.Dm.egSYMBOL), by = "gene_id")
+  tibble(flybase_id = ids) %>%
+    left_join(idsym, by = "flybase_id") -> res
+  res$symbol
+}
 
 read.sample <- function(df.path, top.perc = 100){
   # Function for reading in a SINGLE sample and get symbols
@@ -24,11 +32,6 @@ read.sample <- function(df.path, top.perc = 100){
     filter(str_detect(gene.id, "^FBgn")) %>%
     filter(count.unstranded > quantile(count.unstranded, probs = (100-top.perc) / 100))
   #   2nd - Get symbol by gene.id.
-  #     It is possible to fail and NA will be the result for those
-  id2symbol <- function(id)
-    tryCatch(org.Dm.egSYMBOL[[ org.Dm.egFLYBASE2EG[[ id ]] ]],
-             error = function(e) NA)
-  id2symbol <- Vectorize(id2symbol)
   df %>%
     mutate(symbol = id2symbol(gene.id)) %>%
     relocate(symbol, .after = gene.id)
