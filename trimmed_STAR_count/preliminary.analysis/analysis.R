@@ -41,7 +41,7 @@ df.fc.2 = as.matrix(df.fc.2)
 df.fc.2 = as.matrix(df.fc.2)
 df.fc.2[is.na(df.fc.2)] = 0
 df.fc.normalized = sweep(df.fc.2,2,colSums(df.fc.2)/1e+6,`/`)
- df.coreclockgene <- df.fc.normalized[c("per","tim","cry","cyc","cwo","slmb","dco","mor"), ]
+ df.coreclockgene <- df.fc.normalized[c("per","tim","cry","cyc","cwo","slmb","dco","mor","Clk"), ]
  df.coreclockgene.dataframe <- as.data.frame(df.coreclockgene)
  df.coreclockgene.dataframe $symbol = rownames(df.coreclockgene.dataframe)
 df.fc.normalized.dataframe <- as.data.frame(df.fc.normalized)
@@ -58,9 +58,9 @@ df.filtered = df.filtered %>% dplyr::select(-c("mean"))
 #  theme(axis.title = element_text(size = 12),
 #plot.title = element_text(size = 14))
 
-#foldchange.plot(df.coreclockgene.dataframe, "CT2_RNAi", "CT2_CTR",
-#                fold.change.minmax.values = 1,
-#                mean.count.min.value = 30) +
-#  labs(title="CT2_RNAi/CT2_CTR")+
-#  theme(axis.title = element_text(size = 12),
-#        plot.title = element_text(size = 14))
+foldchange.plot(df.coreclockgene.dataframe, "CT2_RNAi", "CT2_CTR",
+                fold.change.minmax.values = 1,
+                mean.count.min.value = 30) +
+  labs(title="CT2_RNAi/CT2_CTR")+
+  theme(axis.title = element_text(size = 12),
+        plot.title = element_text(size = 14))
